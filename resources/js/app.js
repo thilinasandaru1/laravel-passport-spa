@@ -6,7 +6,14 @@
 
 require("./bootstrap");
 
+/* Imports */
+import VueRouter from "vue-router";
+
+import router from "./routes";
+
 window.Vue = require("vue");
+
+Vue.use(VueRouter);
 
 /**
  * The following block of code may be used to automatically register your
@@ -28,5 +35,6 @@ Vue.component("vue-layout", require("./views/Layout.vue").default);
  */
 
 const app = new Vue({
-    el: "#app"
+    el: "#app",
+    router
 });
