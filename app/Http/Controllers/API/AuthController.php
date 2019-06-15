@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\User;
+
 
 class AuthController extends Controller
 {
@@ -44,7 +46,7 @@ class AuthController extends Controller
        }
 
        // Send an internal API request to get an access token
-       $clinet = DB::table('oauth_clients')
+       $client = DB::table('oauth_clients')
         ->where('password_client', true)
         ->first();
 

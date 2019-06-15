@@ -10,10 +10,14 @@ require("./bootstrap");
 import VueRouter from "vue-router";
 
 import router from "./routes";
+import auth from "./auth";
 
 window.Vue = require("vue");
+window.auth = auth;
 
 Vue.use(VueRouter);
+
+window.Event = new Vue();
 
 /**
  * The following block of code may be used to automatically register your

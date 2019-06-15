@@ -1766,7 +1766,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      authenticated: auth.check(),
+      user: auth.user
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    Event.$on("UserLoggedIn", function () {
+      _this.authenticated = true, _this.user = auth.user;
+    });
+  }
+});
 
 /***/ }),
 
@@ -1806,15 +1826,20 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     login: function login() {
+      var _this = this;
+
       var data = {
         username: this.username,
         password: this.password
       };
-      axios.post("/api/login", data).then(function (_ref) {// TODO: store data
+      axios.post("/api/login", data).then(function (_ref) {
+        var data = _ref.data;
+        // TODO: store data
         // data.token
         // data.
+        auth.login(data.token, data.user);
 
-        var data = _ref.data;
+        _this.$router.push("/dashboard");
       })["catch"](function (_ref2) {
         var response = _ref2.response;
         alert(response.data.message);
@@ -37203,7 +37228,21 @@ var render = function() {
     _vm._v(" "),
     _c(
       "div",
-      [_c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")])],
+      [
+        _vm.authenticated && _vm.user
+          ? _c(
+              "div",
+              [
+                _c("p", [_vm._v("Hello, " + _vm._s(_vm.user.name))]),
+                _vm._v(" "),
+                _c("router-link", { attrs: { to: "/logout" } }, [
+                  _vm._v("Logout")
+                ])
+              ],
+              1
+            )
+          : _c("router-link", { attrs: { to: "/login" } }, [_vm._v("Login")])
+      ],
       1
     ),
     _vm._v(" "),
@@ -52126,6 +52165,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./auth */ "./resources/js/auth.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -52137,8 +52177,11 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 
 
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+window.auth = _auth__WEBPACK_IMPORTED_MODULE_2__["default"];
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]);
+window.Event = new Vue();
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -52160,6 +52203,59 @@ var app = new Vue({
   el: "#app",
   router: _routes__WEBPACK_IMPORTED_MODULE_1__["default"]
 });
+
+/***/ }),
+
+/***/ "./resources/js/auth.js":
+/*!******************************!*\
+  !*** ./resources/js/auth.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Auth =
+/*#__PURE__*/
+function () {
+  function Auth() {
+    _classCallCheck(this, Auth);
+
+    this.token = null;
+    this.uesr = null;
+  }
+
+  _createClass(Auth, [{
+    key: "login",
+    value: function login(token, user) {
+      window.localStorage.setItem("token", token);
+      window.localStorage.setItem("user", JSON.stringify(user));
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.defaults.headers.common["Authorization"] = "Bearer " + token;
+      this.token = token;
+      this.user = user;
+      Event.$emit("UserLoggedIn");
+    }
+  }, {
+    key: "check",
+    value: function check() {
+      return !!this.token;
+    }
+  }]);
+
+  return Auth;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (new Auth());
 
 /***/ }),
 

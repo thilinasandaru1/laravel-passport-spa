@@ -7,7 +7,13 @@
     </div>
 
     <div>
-      <router-link to="/login">Login</router-link>
+      <div v-if="authenticated && user">
+        <p>Hello, {{ user.name }}</p>
+
+        <router-link to="/logout">Logout</router-link>
+      </div>
+
+      <router-link v-else to="/login">Login</router-link>
     </div>
 
     <div style="margin-top: 2rem">
@@ -17,7 +23,19 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      authenticated: auth.check(),
+      user: auth.user
+    };
+  },
+  mounted() {
+    Event.$on("UserLoggedIn", () => {
+      (this.authenticated = true), (this.user = auth.user);
+    });
+  }
+};
 </script>
 
 <style>
