@@ -1783,7 +1783,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
+  methods: {
+    login: function login() {
+      var data = {
+        username: this.username,
+        password: this.password
+      };
+      axios.post("/api/login", data).then(function (_ref) {// TODO: store data
+        // data.token
+        // data.
+
+        var data = _ref.data;
+      })["catch"](function (_ref2) {
+        var response = _ref2.response;
+        alert(response.data.message);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -37194,7 +37232,61 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("Hello World")])
+  return _c("div", [
+    _c("h1", [_vm._v("Login")]),
+    _vm._v(" "),
+    _c("p", [
+      _c("label", { attrs: { for: "username" } }, [_vm._v("Email")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.username,
+            expression: "username"
+          }
+        ],
+        attrs: { type: "text", name: "username" },
+        domProps: { value: _vm.username },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.username = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("p", [
+      _c("label", { attrs: { for: "password" } }, [_vm._v("Password")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.password,
+            expression: "password"
+          }
+        ],
+        attrs: { type: "password", name: "password" },
+        domProps: { value: _vm.password },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.password = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("button", { on: { click: _vm.login } }, [_vm._v("Login")])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
